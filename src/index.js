@@ -80,3 +80,22 @@ app.get("/api/map/:long/:lat", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+app.get("/api/air-quality/:lat/:lon", async (req, res) => {
+  const {lon, lat} = req.params.city;
+  const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid={API_key}`;
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.error(`Error: ${response.status} ${response.statusText}`);
+      return res.status(response.status).json({ error: "Failed to fetch air quality data" });
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching air quality data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+})
