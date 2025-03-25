@@ -104,15 +104,23 @@ app.get("/api/countries", async (req, res) => {
   const url = `https://api.geonames.org/countryInfoJSON?username=adriantayeh`;
 
   try {
+    console.log(`Fetching countries from URL: ${url}`);
     const response = await fetch(url);
 
     if (!response.ok) {
-      console.error(`Error: ${response.status} ${response.statusText}`);
+      console.error(`GeoNames API Error: ${response.status} ${response.statusText}`);
       return res.status(response.status).json({ error: "Failed to fetch country data" });
     }
 
     const data = await response.json();
-    res.json(data.geonames || []);
+    console.log("GeoNames API Response:", data);
+
+    if (!data.geonames) {
+      console.error("Unexpected response format:", data);
+      return res.status(500).json({ error: "Unexpected response from GeoNames API" });
+    }
+
+    res.json(data.geonames);
   } catch (error) {
     console.error("Error fetching country data:", error);
     res.status(500).json({ error: "Internal server error" });
