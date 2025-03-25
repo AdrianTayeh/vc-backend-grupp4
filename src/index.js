@@ -101,8 +101,7 @@ app.get("/api/air-quality/:lat/:lon", async (req, res) => {
 })
 
 app.get("/api/countries", async (req, res) => {
-  const username = "adriantayeh";
-  const url = `https://api.geonames.org/countryInfoJSON?username=${username}`;
+  const url = `https://api.geonames.org/countryInfoJSON?username=adriantayeh`;
 
   try {
     const response = await fetch(url);
