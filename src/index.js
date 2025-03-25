@@ -99,3 +99,23 @@ app.get("/api/air-quality/:lat/:lon", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 })
+
+app.get("/api/countries", async (req, res) => {
+  const username = "adriantayeh";
+  const url = `https://api.geonames.org/countryInfoJSON?username=${username}`;
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.error(`Error: ${response.status} ${response.statusText}`);
+      return res.status(response.status).json({ error: "Failed to fetch country data" });
+    }
+
+    const data = await response.json();
+    res.json(data.geonames || []);
+  } catch (error) {
+    console.error("Error fetching country data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
